@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" style="font-family: 'Vazirmatn';">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Clothing Design Generator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #2E073F;
+            color: white;
+        }
+
+        .navbar {
+            background-color: white;
+            height: 74px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .navbar h1 {
+            color: #2E073F;
+            font-size: 2.3rem;
+            margin: 0;
+        }
+
+        .navbar img {
+            height: 50px;
+        }
+
+        .sidebar {
+            background-color: #2E073F;
+            padding: 20px;
+            height: 100%;
+        }
+
+        .form-container .form-group {
+            width: 100%;
+        }
+
+        .result-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .result-container img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .radio-button {
+            display: none;
+        }
+
+        .radio-label {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            background: #EBD3F8;
+            color: black;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .radio-label:hover {
+            border: 2px solid #7A1CAC9C;
+        }
+        
+        .radio-button:checked+.radio-label {
+            background: #AD49E1;
+        }
+
+        .select-input {
+            background: #EBD3F8;
+            border: 2px solid #EBD3F8;
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        .select-input:focus {
+            background: #EBD3F8;
+            border-radius: 10px;
+            box-shadow: 0 0 0 .2rem #7A1CAC9C;
+            border-color: #7A1CAC9C;
+        }
+
+        .image-container {
+            width: 100%;
+            max-width: 708px;
+            height: auto;
+            overflow: hidden;
+            border: 2px solid #EBD3F8;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .divider {
+            border-right: 3px solid #EBD3F8;
+            height: 100vh;
+            position: absolute;
+            top: 74px;
+            left: 25%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <h1>AI Fashion Designer</h1>
+        <img src="./Logo2_prev_ui.svg" alt="Logo">
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-12 sidebar">
+                <form id="apiForm" class="form-container">
+                    <div class="form-group">
+                        <label for="bodyType">Body Type:</label>
+                        <div>
+                            <input type="radio" id="slim" name="bodyType" value="slim" class="radio-button" required
+                                checked>
+                            <label for="slim" class="radio-label">Slim</label>
+                            <input type="radio" id="average" name="bodyType" value="average" class="radio-button"
+                                required>
+                            <label for="average" class="radio-label">Average</label>
+                            <input type="radio" id="overweight" name="bodyType" value="overweight" class="radio-button"
+                                required>
+                            <label for="overweight" class="radio-label">Overweight</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender:</label>
+                        <div>
+                            <input type="radio" id="man" name="gender" value="man" class="radio-button" required
+                                checked>
+                            <label for="man" class="radio-label">Man</label>
+                            <input type="radio" id="woman" name="gender" value="woman" class="radio-button" required>
+                            <label for="woman" class="radio-label">Woman</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age:</label>
+                        <select id="age" name="age" class="form-control select-input" required>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                            <option value="60">60</option>
+                            <option value="70">70</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="nationality">Model Nationality:</label>
+                        <select id="nationality" name="nationality" class="form-control select-input" required>
+                            <option value="American">American</option>
+                            <option value="British">British</option>
+                            <option value="Canadian">Canadian</option>
+                            <option value="Chinese">Chinese</option>
+                            <option value="French">French</option>
+                            <option value="German">German</option>
+                            <option value="Indian">Indian</option>
+                            <option value="Japanese">Japanese</option>
+                            <option value="Korean">Korean</option>
+                            <option value="Mexican">Mexican</option>
+                            <option value="Russian">Russian</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageStyle">Image Style:</label>
+                        <div>
+                            <input type="radio" id="studio" name="imageStyle" value="studio" class="radio-button"
+                                required checked>
+                            <label for="studio" class="radio-label">Studio</label>
+                            <input type="radio" id="freestyle" name="imageStyle" value="freestyle" class="radio-button"
+                                required>
+                            <label for="freestyle" class="radio-label">Freestyle</label>
+                            <input type="radio" id="clothingSketch" name="imageStyle" value="clothing sketch"
+                                class="radio-button" required>
+                            <label for="clothingSketch" class="radio-label">Clothing Sketch</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Describe your desired outfit:</label>
+                        <textarea id="description" name="description"
+                            style="background: #EBD3F8; border-radius: 10px; width: 100%;" class="form-control"
+                            placeholder="A neon green jacket with oversized zebra print pants."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary col-12"
+                        style="background: #7A1CAC; border-radius: 10px; border-color: #7A1CAC; height: 46px;">Generate</button>
+                </form>
+            </div>
+            <div class="divider"></div>
+            <div class="col-md-9 col-12">
+                <div id="result" class="result-container">
+                    <div>
+                        <h2>Welcome to ModaFusion</h2>
+                    </div>
+                    <div class="image-container">
+                        <img id="resultImage" src="" alt="Generated Image" style="display:none;" />
+                    </div>
+                    <div>
+                        <a id="downloadLink" href="" download
+                            style="display:none; background: #AD49E1; border-radius: 10px; border-color: #7A1CAC;"
+                            class="btn btn-primary mt-6">Download</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script>
+        document.getElementById('apiForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const bodyTypeElement = document.querySelector('input[name="bodyType"]:checked');
+            const genderElement = document.querySelector('input[name="gender"]:checked');
+            const ageElement = document.getElementById('age');
+            const nationalityElement = document.getElementById('nationality');
+            const descriptionElement = document.getElementById('description');
+            const imageStyleElement = document.querySelector('input[name="imageStyle"]:checked');
+
+            if (!bodyTypeElement || !genderElement || !ageElement || !nationalityElement || !descriptionElement || !imageStyleElement) {
+                alert('Please fill out all required fields.');
+                return;
+            }
+
+            const bodyType = bodyTypeElement.value;
+            const gender = genderElement.value;
+            const age = ageElement.value;
+            const nationality = nationalityElement.value;
+            const description = descriptionElement.value;
+            const imageStyle = imageStyleElement.value;
+
+            const prompt = `${imageStyle} photo of a ${age}-years old ${nationality} ${gender} ${bodyType} model wearing ${description}, sunglasses, hand in pocket, no animation, no additional object in the image except the model. Please create a realistic and detailed image based on these specifications. no animation`;
+
+            const url = "https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image";
+            const body = {
+                steps: 40,
+                width: 1024,
+                height: 1024,
+                seed: 0,
+                cfg_scale: 5,
+                samples: 1,
+                text_prompts: [
+                    {
+                        text: prompt,
+                        weight: 1
+                    }
+                ]
+            };
+
+            const headers = {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": "Bearer sk-BfTTUQxx14Eh7EkXAV2ClQb3YQYsC0woMZE8tTrJSDhQ31yV"
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(body)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Non-200 response: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    // Display the image
+                    const resultImage = document.getElementById('resultImage');
+                    resultImage.src = 'data:image/png;base64,' + data.artifacts[0].base64;
+                    resultImage.style.display = 'block';
+
+                    // Create download link
+                    const downloadLink = document.getElementById('downloadLink');
+                    downloadLink.href = resultImage.src;
+                    downloadLink.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+        });
+    </script>
+
+</body>
+
+</html>
